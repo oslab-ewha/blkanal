@@ -10,8 +10,10 @@ def usage():
     print("""\
 Usage: blkanal.py [<options>] <path>
   <options>
+   -p: plotting mode
    -R: analyze only read access
    -W: analyze only write access
+   -P <pid>: analyze accesses with given pid
 """)
 
 class BlkAnalysis:
@@ -20,7 +22,10 @@ class BlkAnalysis:
         ta = trace_access.TraceAccess()
         if not ta.load(args.path):
             return
-        plot.plot(ta, args)
+        if args.plotting_mode:
+            plot.plot(ta, args)
+        else:
+            ta.summary()
 
 if __name__ == "__main__":
     import blkanal

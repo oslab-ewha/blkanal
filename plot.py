@@ -6,6 +6,10 @@ def scatter(acc, color):
 
 def plot(ta, args):
     for acc in ta.accesses:
+        if args.pidonly >= 0:
+            if args.pidonly != acc.pid:
+                continue
+
         if acc.is_read:
             if not args.writeonly:
                 scatter(acc, 'red')
