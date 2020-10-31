@@ -6,6 +6,8 @@ class TraceAccess(trace_data.TraceData):
     def __init__(self, args):
         super().__init__()
         self.accesses = []
+        self.accesses_read = []
+        self.accesses_write = []
         self.contexts = {}
         self.lba_max = 0
         self.__args = args
@@ -33,7 +35,13 @@ class TraceAccess(trace_data.TraceData):
         acc.context.add(acc)
         acc.setLbaDiff(self.accesses[-1 * self.__args.n_lookbacks:])
         self.accesses.append(acc)
+        if acc.is_read:
+            self.accesses_read.append(acc)
+        else:
+            self.accesses_write.append(acc)
 
     def summary(self):
+        print("access count: {}(read:{}, write:{})".format(len(self.accesses), len(self.accesses_read), len(self.accesses_write)))
+        print("timestamp: {}-{}".format(format(self.accesses[0].ts, ".4f"), format(self.accesses[-1].ts, ".4f")))
         for c in self.contexts:
             print(c)

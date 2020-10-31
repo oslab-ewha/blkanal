@@ -15,10 +15,28 @@ class Access:
         self.diff_lba = 0
 
     def setLbaDiff(self, prevs):
+        if len(prevs) == 0:
+            self.diff_lba = None
+            return
         diff_min = None
         for prev in prevs:
-            diff = abs(self.lba - (prev.lba + prev.nblks))
+            if self.isAccessedBy(prev):
+                self.diff_lba = -512
+                return
+            diff = self.lba - (prev.lba + prev.nblks)
+            if diff < 0:
+                continue
             if diff_min is None or diff_min > diff:
                 diff_min = diff
 
-        self.diff_lba = diff_min
+        if diff_min is None:
+            self.diff_lba = -1024
+        elif diff_min >= 1024:
+            self.diff_lba = 1024
+        else:
+            self.diff_lba = diff_min
+
+    def isAccessedBy(self, acc):
+        if self.lba >= acc.lba and self.lba + self.nblks <= acc.lba + acc.nblks:
+            return True
+        return False
