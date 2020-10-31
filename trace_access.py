@@ -1,31 +1,25 @@
 import trace_data
 import trace_context
-
-class Access:
-    def __init__(self, row):
-        self.timestamp = float(row[0])
-        if 'W' in row[4]:
-            self.is_read = False
-        elif 'R' in row[4]:
-            self.is_read = True
-        else:
-            self.is_read = None
-        self.pid = int(row[2])
-        self.lba =  int(row[5])
-        self.nblks = int(row[6])
-        self.context = None
+import access
 
 class TraceAccess(trace_data.TraceData):
-    def __init__(self):
+    def __init__(self, args):
         super().__init__()
         self.accesses = []
         self.contexts = {}
         self.lba_max = 0
+        self.__args = args
 
     def parseLine(self, row):
-        acc = Access(row)
+        acc = access.Access(row)
+        if acc.ts < self.__args.ts_start or acc.ts > self.__args.ts_end:
+            return
         if acc.is_read is None:
             return
+        if self.__args.pidonly >= 0:
+            if self.__args.pidonly != acc.pid:
+                return
+
         if acc.lba > self.lba_max:
             self.lba_max = acc.lba
 
@@ -37,6 +31,7 @@ class TraceAccess(trace_data.TraceData):
             acc.context = ctx
 
         acc.context.add(acc)
+        acc.setLbaDiff(self.accesses[-1 * self.__args.n_lookbacks:])
         self.accesses.append(acc)
 
     def summary(self):

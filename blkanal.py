@@ -11,6 +11,9 @@ def usage():
 Usage: blkanal.py [<options>] <path>
   <options>
    -p: plotting mode
+   -D: display lba difference
+   -T <timestamp range>
+   -b <cnt>: look back count for previous access
    -R: analyze only read access
    -W: analyze only write access
    -P <pid>: analyze accesses with given pid
@@ -19,7 +22,7 @@ Usage: blkanal.py [<options>] <path>
 class BlkAnalysis:
     def analyze(self, args):
         global  readonly, writeonly
-        ta = trace_access.TraceAccess()
+        ta = trace_access.TraceAccess(args)
         if not ta.load(args.path):
             return
         if args.plotting_mode:
