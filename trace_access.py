@@ -9,11 +9,14 @@ class TraceAccess(trace_data.TraceData):
         self.accesses_read = []
         self.accesses_write = []
         self.contexts = {}
+        self.lba_min = -1
         self.lba_max = 0
         self.__args = args
 
     def parseLine(self, row):
         acc = access.Access(row)
+        if acc.lba < self.__args.lba_start or (self.__args.lba_end > 0 and acc.lba > self.__args.lba_end):
+            return
         if acc.ts < self.__args.ts_start or acc.ts > self.__args.ts_end:
             return
         if acc.is_read is None:
@@ -22,6 +25,8 @@ class TraceAccess(trace_data.TraceData):
             if self.__args.pidonly != acc.pid:
                 return
 
+        if self.lba_min < 0 or acc.lba < self.lba_min:
+            self.lba_min = acc.lba
         if acc.lba > self.lba_max:
             self.lba_max = acc.lba
 
@@ -42,6 +47,7 @@ class TraceAccess(trace_data.TraceData):
 
     def summary(self):
         print("access count: {}(read:{}, write:{})".format(len(self.accesses), len(self.accesses_read), len(self.accesses_write)))
+        print("LBA: {}-{}".format(self.lba_min, self.lba_max))
         print("timestamp: {}-{}".format(format(self.accesses[0].ts, ".4f"), format(self.accesses[-1].ts, ".4f")))
         for c in self.contexts:
             print(c)

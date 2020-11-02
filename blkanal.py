@@ -12,6 +12,7 @@ Usage: blkanal.py [<options>] <path>
   <options>
    -p: plotting mode
    -D: display lba difference
+   -B <block range>
    -T <timestamp range>
    -b <cnt>: look back count for previous access
    -R: analyze only read access

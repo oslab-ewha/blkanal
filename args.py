@@ -7,8 +7,20 @@ plotting_mode = False
 display_difflba = False
 pidonly = -1
 n_lookbacks = 1
+lba_start = 0
+lba_end = -1
 ts_start = 0
 ts_end = 10000000
+
+def parse_lba_range(range):
+    global      lba_start, lba_end
+
+    if not '-' in range:
+        lba_start = int(range)
+    else:
+        start, end = range.split(sep='-', maxsplit=1)
+        lba_start = int(start)
+        lba_end = int(end)
 
 def parse_ts_range(range):
     global      ts_start, ts_end
@@ -24,7 +36,7 @@ def parseArgs():
     global      path, readonly, writeonly, plotting_mode, display_difflba, pidonly, n_lookbacks
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "h:RWpP:Db:T:")
+        opts, args = getopt.getopt(sys.argv[1:], "h:RWpP:Db:B:T:")
     except getopt.GetoptError:
         return False
 
@@ -44,6 +56,8 @@ def parseArgs():
             display_difflba = True
         elif o == '-P':
             pidonly = int(a)
+        elif o == '-B':
+            parse_lba_range(a)
         elif o == '-T':
             parse_ts_range(a)
 
