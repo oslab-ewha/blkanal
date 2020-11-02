@@ -11,6 +11,7 @@ def usage():
 Usage: blkanal.py [<options>] <path>
   <options>
    -p: plotting mode
+   -G <dim>: scatter grid dimension
    -D: display lba difference
    -B <block range>
    -T <timestamp range>

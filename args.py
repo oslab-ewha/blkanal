@@ -7,10 +7,20 @@ plotting_mode = False
 display_difflba = False
 pidonly = -1
 n_lookbacks = 1
+grid_nx = 0
+grid_ny = 0
 lba_start = 0
 lba_end = -1
 ts_start = 0
 ts_end = 10000000
+
+def parse_scatter_dim(dim):
+    global      grid_nx, grid_ny
+
+    if ':' in dim:
+        nx, ny = dim.split(sep=':', maxsplit=1)
+        grid_nx = int(nx)
+        grid_ny = int(ny)
 
 def parse_lba_range(range):
     global      lba_start, lba_end
@@ -36,7 +46,7 @@ def parseArgs():
     global      path, readonly, writeonly, plotting_mode, display_difflba, pidonly, n_lookbacks
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "h:RWpP:Db:B:T:")
+        opts, args = getopt.getopt(sys.argv[1:], "h:RWpG:P:Db:B:T:")
     except getopt.GetoptError:
         return False
 
@@ -50,6 +60,8 @@ def parseArgs():
             writeonly = True
         elif o == '-p':
             plotting_mode = True
+        elif o == '-G':
+            parse_scatter_dim(a)
         elif o == '-b':
             n_lookbacks = int(a)
         elif o == '-D':

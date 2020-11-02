@@ -1,9 +1,5 @@
 import matplotlib.pyplot as plt
 
-def scatter(acc, color):
-    marker = ([ (-1, 0), (1, 0), (1, acc.nblks), (-1, acc.nblks) ], 0)
-    plt.scatter(acc.timestamp, acc.lba, marker = marker, c = color)
-
 def plot(ta, args):
     if not args.display_difflba:
         plot_access(ta, args)
@@ -12,18 +8,33 @@ def plot(ta, args):
 
     plt.show()
 
-def plot_access(ta, args):
+def __plot_normalized_access(ta, args):
+    ts_start = ta.accesses[0].ts
+    ts_range = ta.accesses[-1].ts - ts_start
+    lba_range = ta.lba_max - ta.lba_min
     for acc in ta.accesses:
-        if args.pidonly >= 0:
-            if args.pidonly != acc.pid:
-                continue
-
+        x = int((acc.ts - ts_start) / ts_range * args.grid_nx)
+        y = int((acc.lba - ta.lba_min) / lba_range * args.grid_ny)
         if acc.is_read:
-            if not args.writeonly:
-                scatter(acc, 'red')
+            color = 'red'
         else:
-            if not args.readonly:
-                scatter(acc, 'blue')
+            color = 'blue'
+        plt.scatter(x, y, c = color)
+
+def __plot_access(ta, args):
+    for acc in ta.accesses:
+        if acc.is_read:
+            color = 'red'
+        else:
+            color = 'blue'
+        marker = ([ (-1, 0), (1, 0), (1, acc.nblks), (-1, acc.nblks) ], 0)
+        plt.scatter(acc.timestamp, acc.lba, marker = marker, c = color)
+
+def plot_access(ta, args):
+    if args.grid_nx > 0:
+        __plot_normalized_access(ta, args)
+    else:
+        __plot_access(ta, args)
 
 def plot_difflba(ta, args):
     xr = []

@@ -25,6 +25,12 @@ class TraceAccess(trace_data.TraceData):
             if self.__args.pidonly != acc.pid:
                 return
 
+        if self.__args.writeonly:
+            if acc.is_read:
+                return
+        if self.__args.readonly:
+            if not acc.is_read:
+                return
         if self.lba_min < 0 or acc.lba < self.lba_min:
             self.lba_min = acc.lba
         if acc.lba > self.lba_max:
