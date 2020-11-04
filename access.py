@@ -37,6 +37,8 @@ class Access:
             self.diff_lba = diff_min
 
     def isAccessedBy(self, acc):
-        if self.lba >= acc.lba and self.lba + self.nblks <= acc.lba + acc.nblks:
+        last = self.lba + self.nblks - 1
+        if (self.lba >= acc.lba and self.lba < acc.lba + acc.nblks) or \
+           (last >= acc.lba and last < acc.lba + acc.nblks):
             return True
         return False

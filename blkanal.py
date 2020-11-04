@@ -4,9 +4,9 @@ import sys
 import logger
 import trace_access
 import plot
-import args
+from conf_ba import ConfBlkAnal
 
-def usage():
+def __usage_BlkAnalysis():
     print("""\
 Usage: blkanal.py [<options>] <path>
   <options>
@@ -22,13 +22,12 @@ Usage: blkanal.py [<options>] <path>
 """)
 
 class BlkAnalysis:
-    def analyze(self, args):
-        global  readonly, writeonly
-        ta = trace_access.TraceAccess(args)
-        if not ta.load(args.path):
+    def analyze(self, conf):
+        ta = trace_access.TraceAccess(conf)
+        if not ta.load(conf.path):
             return
-        if args.plotting_mode:
-            plot.plot(ta, args)
+        if conf.plotting_mode:
+            plot.plot(ta, conf)
         else:
             ta.summary()
 
@@ -37,9 +36,6 @@ if __name__ == "__main__":
 
     logger.init("blkanal")
 
-    if not args.parseArgs():
-        usage()
-        exit(1)
-
     ba = blkanal.BlkAnalysis()
-    exit(ba.analyze(args))
+
+    exit(ba.analyze(ConfBlkAnal(__usage_BlkAnalysis)))
