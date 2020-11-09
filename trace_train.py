@@ -20,8 +20,8 @@ class TraceTrain(trace_access.TraceAccess):
             accesses = self.__get_context_accesses(ctx)
             
             bmpbar = accbmpbar.AccBmpBar(accesses, conf.ts_intv, conf.lba_max, conf.width, conf.height)
-            for score, accbmp in bmpbar:
-                writer.writerow([score] + accbmp.bitmap())
+            for accbmp in bmpbar:
+                writer.writerow(accbmp.score.getScoreVec() + accbmp.bitmap())
 
     def __get_context_accesses(self, ctx):
         accesses = []

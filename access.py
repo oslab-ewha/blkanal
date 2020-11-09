@@ -20,7 +20,7 @@ class Access:
             return
         diff_min = None
         for prev in prevs:
-            if self.isAccessedBy(prev):
+            if self.isOverlappedBy(prev):
                 self.diff_lba = -512
                 return
             diff = self.lba - (prev.lba + prev.nblks)
@@ -36,9 +36,14 @@ class Access:
         else:
             self.diff_lba = diff_min
 
-    def isAccessedBy(self, acc):
+    def isOverlappedBy(self, acc):
         last = self.lba + self.nblks - 1
         if (self.lba >= acc.lba and self.lba < acc.lba + acc.nblks) or \
            (last >= acc.lba and last < acc.lba + acc.nblks):
+            return True
+        return False
+
+    def isSeqAccessedBy(self, acc):
+        if self.lba + self.nblks == acc.lba:
             return True
         return False

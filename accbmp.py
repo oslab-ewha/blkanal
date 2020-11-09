@@ -1,5 +1,4 @@
 from accbmpcol import AccBmpCol
-from accbit import AccBit
 
 class AccBmp:
     def __init__(self, width, height):
@@ -7,6 +6,7 @@ class AccBmp:
         self.width = width
         self.height = height
         self.acc_bmp = []
+        self.score = None
 
     def append(self, bmp_col):
         if bmp_col is None:
@@ -24,9 +24,6 @@ class AccBmp:
             return False
         return True
 
-    def getSeqScore(self, bmp_col):
-        return self.acc_bmp[-1].getSeqScore(bmp_col)
-
     def bitmap(self):
         bmp = []
         for c in self.acc_bmp:
@@ -38,11 +35,7 @@ class AccBmp:
         for r in range(0, self.height):
             s += '|'
             for c in range(0, self.width):
-                bitval = self.acc_bmp[c].bmp_col[r]
-                if bitval > 0:
-                    s += str(AccBit(bitval))
-                else:
-                    s += ' '
+                s += str(self.acc_bmp[c].bmp_col[r])
             s += '|\n'
         s += self.__str_bar()
         return s
