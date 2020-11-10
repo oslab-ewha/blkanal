@@ -13,3 +13,6 @@ class AccScore:
 
     def getScoreVec(self):
         return [ self.n_hits / self.count, self.n_seqs / self.count, self.n_rnds / self.count ]
+
+    def __str__(self):
+        return "hit:{}, seq:{}, rnd:{}".format(self.n_hits, self.n_seqs, self.n_rnds)

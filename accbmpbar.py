@@ -3,11 +3,11 @@ from accbmp import AccBmp
 from acchist import AccessHist
 
 class AccBmpBar:
-    def __init__(self, accesses, ts_intv, lbamax, width, height):
-        self.ts_intv = ts_intv
-        self.lbamax = lbamax
-        self.width = width
-        self.height = height
+    def __init__(self, conf, accesses):
+        self.ts_intv = conf.ts_intv
+        self.lbamax = conf.lba_max
+        self.width = conf.width
+        self.height = conf.height
 
         self.__bmp_cols = []
         self.__build(accesses)
@@ -51,6 +51,7 @@ class AccBmpBar:
                     acc_bmp.append(None)
             self.__index += 1
             if acc_bmp.is_valid():
-                acc_bmp.score = self.__bmp_cols[self.__index + self.width - 1].score
+                acc_bmp.bmpcol_score = self.__bmp_cols[self.__index + self.width - 1]
+                acc_bmp.score = acc_bmp.bmpcol_score.score
                 if acc_bmp.score.count > 0:
                     return acc_bmp

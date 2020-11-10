@@ -7,7 +7,8 @@ class ConfGetTrain(Conf):
         self.ts_intv = 0.001
         self.lba_max = 0
         self.path_out = None
-        super().__init__('o:d:i:M:', usage)
+        self.no_csv = False
+        super().__init__('o:d:i:M:H', usage)
 
     def handleOpt(self, o, a):
         if o == '-o':
@@ -18,6 +19,8 @@ class ConfGetTrain(Conf):
             self.ts_intv = float(a)
         elif o == '-M':
             self.lbamax = int(a)
+        elif o == '-H':
+            self.no_csv = True
 
     def __parse_bmp_dim(self, dim):
         if 'x' in dim:

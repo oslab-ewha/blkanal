@@ -27,7 +27,7 @@ class AccBmp:
     def bitmap(self):
         bmp = []
         for c in self.acc_bmp:
-            bmp += c.bmp_col
+            bmp += c.bitmap()
         return bmp
 
     def __str__(self):
@@ -36,7 +36,10 @@ class AccBmp:
             s += '|'
             for c in range(0, self.width):
                 s += str(self.acc_bmp[c].bmp_col[r])
-            s += '|\n'
+            s += '|'
+            if not self.bmpcol_score is None:
+                s += str(self.bmpcol_score.bmp_col[r])
+            s += '\n'
         s += self.__str_bar()
         return s
 

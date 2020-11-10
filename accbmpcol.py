@@ -20,6 +20,12 @@ class AccBmpCol:
     def getScoreVec(self):
         return self.score.getScoreVec()
 
+    def bitmap(self):
+        bmp = []
+        for b in self.bmp_col:
+            bmp.append(b.getval())
+        return bmp
+
     def __str__(self):
         s = "|"
         for b in self.bmp_col:

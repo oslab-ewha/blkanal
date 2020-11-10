@@ -38,7 +38,7 @@ class AccBit:
         if accbit.has_write:
             self.has_write = True
             
-    def __getval(self):
+    def getval(self):
         val = 0
         if self.has_read:
             val |= 1
@@ -71,4 +71,12 @@ class AccBit:
         return score
 
     def __str__(self):
-        return format(self.__getval(), '02')
+        val = self.getval()
+        if val < 10:
+            return str(val)
+        elif val < 16:
+            return ['a', 'b', 'c', 'd', 'e', 'f'][val - 10]
+        elif val < 26:
+            return ['`', '!', '@', '#', '$', '%', '^', '&', '*', '(' ][val - 16]
+        else:
+            return ['A', 'B', 'C', 'D', 'E', 'F'][val - 26]

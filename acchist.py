@@ -15,13 +15,12 @@ class AccessHist:
 
     def __getAccBit(self, acc):
         accbit = AccBit()
-        is_accessed = False
         for _acc in self.accesses:
             if _acc.isOverlappedBy(acc):
                 accbit.setHit(acc.is_read)
             elif _acc.isSeqAccessedBy(acc):
                 accbit.setSeq(acc.is_read)
-        if not is_accessed:
+        if not accbit.has_hit and not accbit.has_seq:
             accbit.setRnd(acc.is_read)
         return accbit
 

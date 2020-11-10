@@ -17,6 +17,7 @@ Usage: getrain.py [<options>] <path>
    -R: analyze only read access
    -W: analyze only write access
    -P <pid>: analyze accesses with given pid
+   -H: human readable output(no csv)
 """)
 
 class GetTrain:
@@ -25,7 +26,7 @@ class GetTrain:
         tt = trace_train.TraceTrain(conf)
         if not tt.load(conf.path):
             return
-        tt.gen_train_data(conf)
+        tt.gen_train_data()
 
 if __name__ == "__main__":
     import getrain
