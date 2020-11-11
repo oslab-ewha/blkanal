@@ -1,4 +1,6 @@
 from conf import Conf
+import logger
+import os
 
 class ConfGetTrain(Conf):
     def __init__(self, usage):
@@ -8,9 +10,8 @@ class ConfGetTrain(Conf):
         self.lba_max = 0
         self.path_out = None
         self.n_forwards = 1
-        self.min_weight = 0.5
         self.no_csv = False
-        super().__init__('o:d:i:M:f:w:H', usage)
+        super().__init__('o:d:i:M:f:H', usage)
 
     def handleOpt(self, o, a):
         if o == '-o':
@@ -23,8 +24,6 @@ class ConfGetTrain(Conf):
             self.lbamax = int(a)
         elif o == '-f':
             self.n_forwards = int(a)
-        elif o == 'w':
-            self.min_weight = float(a)
         elif o == '-H':
             self.no_csv = True
 
@@ -33,3 +32,16 @@ class ConfGetTrain(Conf):
             width, height = dim.split(sep='x', maxsplit=1)
             self.width = int(width)
             self.height = int(height)
+
+    def check(self):
+        if len(self.paths) == 0:
+            logger.error("empty path")
+            exit(1)
+        for path in self.paths:
+            if not os.path.exists(path):
+                logger.error("input file does not exist: {}".format(path))
+                exit(1)
+        if not self.path_out is None:
+            if os.path.exists(self.path_out):
+                logger.error("output file exists: {}".format(self.path_out))
+                exit(1)

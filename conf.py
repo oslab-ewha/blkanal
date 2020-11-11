@@ -46,7 +46,13 @@ class Conf:
         if len(args) < 1:
             return False
 
-        self.path = args[0]
+        if len(args) == 1:
+            self.path = args[0]
+            self.paths = [ args[0] ]
+        else:
+            self.paths = args
+
+        self.check()
         return True
 
     def __parse_lba_range(self, range):
@@ -72,4 +78,7 @@ class Conf:
         return pids
 
     def handleOpt(self, o, a):
+        pass
+
+    def check(self):
         pass

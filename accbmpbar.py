@@ -3,9 +3,12 @@ from accbmp import AccBmp
 from acchist import AccessHist
 
 class AccBmpBar:
-    def __init__(self, conf, accesses):
+    def __init__(self, conf, lba_max, accesses):
         self.ts_intv = conf.ts_intv
-        self.lbamax = conf.lba_max
+        if conf.lba_max == 0:
+            self.lbamax = lba_max
+        else:
+            self.lbamax = conf.lba_max
         self.width = conf.width
         self.height = conf.height
         self.n_forwards = conf.n_forwards

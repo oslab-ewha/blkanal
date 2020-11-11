@@ -18,17 +18,18 @@ Usage: getrain.py [<options>] <path>
    -W: analyze only write access
    -P <pid>: analyze accesses with given pid
    -f <count>: forward columns (default: 1)
-   -w <weight>: start weight (default: 0.5)
    -H: human readable output(no csv)
 """)
 
 class GetTrain:
     def getdata(self, usage):
         conf = ConfGetTrain(usage)
-        tt = trace_train.TraceTrain(conf)
-        if not tt.load(conf.path):
-            return
-        tt.gen_train_data()
+
+        for path in conf.paths:
+            tt = trace_train.TraceTrain(conf)
+            if not tt.load(path):
+                return
+            tt.gen_train_data()
 
 if __name__ == "__main__":
     import getrain
