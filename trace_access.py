@@ -21,8 +21,8 @@ class TraceAccess(trace_data.TraceData):
             return
         if acc.is_read is None:
             return
-        if self.__conf.pidonly >= 0:
-            if self.__conf.pidonly != acc.pid:
+        if len(self.__conf.pidonly) > 0:
+            if not acc.pid in self.__conf.pidonly:
                 return
 
         if self.__conf.writeonly:

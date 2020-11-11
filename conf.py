@@ -7,7 +7,7 @@ class Conf:
         self.usage = usage
         self.readonly = False
         self.writeonly = False
-        self.pidonly = -1
+        self.pidonly = []
         self.n_lookbacks = 1
         self.lba_start = 0
         self.lba_end = -1
@@ -34,7 +34,7 @@ class Conf:
             elif o == '-W':
                 self.writeonly = True
             elif o == '-P':
-                self.pidonly = int(a)
+                self.pidonly = self.__parse_pid_only(a)
             elif o == '-b':
                 self.n_lookbacks = int(a)
             elif o == '-B':
@@ -64,6 +64,12 @@ class Conf:
             start, end = range.split(sep='-', maxsplit=1)
             self.ts_start = float(start)
             self.ts_end = float(end)
+
+    def __parse_pid_only(self, pidset):
+        pids = []
+        for p in pidset.split(sep=','):
+            pids.append(int(p))
+        return pids
 
     def handleOpt(self, o, a):
         pass
