@@ -1,14 +1,32 @@
 import matplotlib.pyplot as plt
 
 def plot(ta, conf):
+    global      __ax
+
+    fig, __ax = plt.subplots()
+    __ax.set_xlabel('Time(sec)', fontweight = 'bold')
     if not conf.display_difflba:
         plot_access(ta, conf)
     else:
         plot_difflba(ta, conf)
 
+    __ax.legend()
     plt.show()
 
+def __scatter(x, y, is_read):
+    if is_read:
+        color = 'red'
+        label = 'read'
+    else:
+        color = 'blue'
+        label = 'write'
+    plt.scatter(x, y, c = color, label = label)
+
 def __plot_normalized_access(ta, conf):
+    xr = []
+    yr = []
+    xw = []
+    yw = []
     ts_start = ta.accesses[0].ts
     ts_range = ta.accesses[-1].ts - ts_start
     lba_range = ta.lba_max - ta.lba_min
@@ -16,10 +34,11 @@ def __plot_normalized_access(ta, conf):
         x = int((acc.ts - ts_start) / ts_range * conf.grid_nx)
         y = int((acc.lba - ta.lba_min) / lba_range * conf.grid_ny)
         if acc.is_read:
-            color = 'red'
+            xr.append(x); yr.append(y)
         else:
-            color = 'blue'
-        plt.scatter(x, y, c = color)
+            xw.append(x); yw.append(y)
+    __scatter(xr, yr, True)
+    __scatter(xw, yw, False)
 
 def __plot_access(ta, conf):
     xr = []
@@ -33,16 +52,30 @@ def __plot_access(ta, conf):
         else:
             xw.append(acc.timestamp)
             yw.append(acc.lba)
-    plt.scatter(xr, yr, c = 'red')
-    plt.scatter(xw, yw, c = 'blue')
+    __scatter(xr, yr, True)
+    __scatter(xw, yw, False)
 
 def plot_access(ta, conf):
+    global      __ax
+
     if conf.grid_nx > 0:
+        __ax.set_ylabel('LBA(Normalized)', fontweight = 'bold')
         __plot_normalized_access(ta, conf)
     else:
+        __ax.set_ylabel('LBA', fontweight = 'bold')
         __plot_access(ta, conf)
 
+def __plot(x, y, is_read):
+    if is_read:
+        color = 'red'
+        label = 'read'
+    else:
+        color = 'blue'
+        label = 'write'
+    plt.plot(x, y, c=color, marker='x', label = label)
+
 def plot_difflba(ta, conf):
+    __ax.set_ylabel('LBA difference', fontweight = 'bold')
     xr = []
     yr = []
     xw = []
@@ -56,6 +89,6 @@ def plot_difflba(ta, conf):
             yw.append(acc.diff_lba)
 
     if not conf.writeonly:
-        plt.plot(xr, yr, c='red', marker='x')
+        __plot(xr, yr, True)
     if not conf.readonly:
-        plt.plot(xw, yw, c='blue', marker='x')
+        __plot(xw, yw, False)
