@@ -1,4 +1,5 @@
 from accbmpcol import AccBmpCol
+from accscore import AccScore
 
 class AccBmp:
     def __init__(self, width, height):
@@ -7,6 +8,7 @@ class AccBmp:
         self.height = height
         self.acc_bmp = []
         self.score = None
+        self.bmpcol_forwards = []
 
     def append(self, bmp_col):
         if bmp_col is None:
@@ -30,6 +32,13 @@ class AccBmp:
             bmp += c.bitmap()
         return bmp
 
+    def calcScore(self):
+        self.score = AccScore()
+        for c in self.acc_bmp:
+            self.score.mergeScore(c.score)
+        for c in reversed(self.bmpcol_forwards):
+            self.score.merge(c.score)
+
     def __str__(self):
         s = self.__str_bar()
         for r in range(0, self.height):
@@ -37,8 +46,8 @@ class AccBmp:
             for c in range(0, self.width):
                 s += str(self.acc_bmp[c].bmp_col[r])
             s += '|'
-            if not self.bmpcol_score is None:
-                s += str(self.bmpcol_score.bmp_col[r])
+            for c in self.bmpcol_forwards:
+                s += str(c.bmp_col[r])
             s += '\n'
         s += self.__str_bar()
         return s

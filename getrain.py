@@ -17,6 +17,8 @@ Usage: getrain.py [<options>] <path>
    -R: analyze only read access
    -W: analyze only write access
    -P <pid>: analyze accesses with given pid
+   -f <count>: forward columns (default: 1)
+   -w <weight>: start weight (default: 0.5)
    -H: human readable output(no csv)
 """)
 

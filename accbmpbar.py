@@ -8,7 +8,7 @@ class AccBmpBar:
         self.lbamax = conf.lba_max
         self.width = conf.width
         self.height = conf.height
-
+        self.n_forwards = conf.n_forwards
         self.__bmp_cols = []
         self.__build(accesses)
 
@@ -51,7 +51,8 @@ class AccBmpBar:
                     acc_bmp.append(None)
             self.__index += 1
             if acc_bmp.is_valid():
-                acc_bmp.bmpcol_score = self.__bmp_cols[self.__index + self.width - 1]
-                acc_bmp.score = acc_bmp.bmpcol_score.score
+                idx_forward = self.__index + self.width - 1
+                acc_bmp.bmpcol_forwards = self.__bmp_cols[idx_forward:idx_forward + self.n_forwards - 1]
+                acc_bmp.calcScore()
                 if acc_bmp.score.count > 0:
                     return acc_bmp

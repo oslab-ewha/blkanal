@@ -7,8 +7,10 @@ class ConfGetTrain(Conf):
         self.ts_intv = 0.001
         self.lba_max = 0
         self.path_out = None
+        self.n_forwards = 1
+        self.min_weight = 0.5
         self.no_csv = False
-        super().__init__('o:d:i:M:H', usage)
+        super().__init__('o:d:i:M:f:w:H', usage)
 
     def handleOpt(self, o, a):
         if o == '-o':
@@ -19,6 +21,10 @@ class ConfGetTrain(Conf):
             self.ts_intv = float(a)
         elif o == '-M':
             self.lbamax = int(a)
+        elif o == '-f':
+            self.n_forwards = int(a)
+        elif o == 'w':
+            self.min_weight = float(a)
         elif o == '-H':
             self.no_csv = True
 
