@@ -1,14 +1,15 @@
 import matplotlib.pyplot as plt
+import conf
 
-def plot(ta, conf):
+def plot(ta):
     global      __ax
 
     fig, __ax = plt.subplots()
     __ax.set_xlabel('Time(sec)', fontweight = 'bold')
     if not conf.display_difflba:
-        plot_access(ta, conf)
+        plot_access(ta)
     else:
-        plot_difflba(ta, conf)
+        plot_difflba(ta)
 
     __ax.legend()
     plt.show()
@@ -40,7 +41,7 @@ def __plot_normalized_access(ta, conf):
     __scatter(xr, yr, True)
     __scatter(xw, yw, False)
 
-def __plot_access(ta, conf):
+def __plot_access(ta):
     xr = []
     yr = []
     xw = []
@@ -55,15 +56,15 @@ def __plot_access(ta, conf):
     __scatter(xr, yr, True)
     __scatter(xw, yw, False)
 
-def plot_access(ta, conf):
+def plot_access(ta):
     global      __ax
 
     if conf.grid_nx > 0:
         __ax.set_ylabel('LBA(Normalized)', fontweight = 'bold')
-        __plot_normalized_access(ta, conf)
+        __plot_normalized_access(ta)
     else:
         __ax.set_ylabel('LBA', fontweight = 'bold')
-        __plot_access(ta, conf)
+        __plot_access(ta)
 
 def __plot(x, y, is_read):
     if is_read:
@@ -74,7 +75,7 @@ def __plot(x, y, is_read):
         label = 'write'
     plt.plot(x, y, c=color, marker='x', label = label)
 
-def plot_difflba(ta, conf):
+def plot_difflba(ta):
     __ax.set_ylabel('LBA difference', fontweight = 'bold')
     xr = []
     yr = []

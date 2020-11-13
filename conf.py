@@ -2,22 +2,24 @@ import sys
 import getopt
 import logger
 
+readonly = False
+writeonly = False
+pidonly = []
+n_lookbacks = 1
+lba_start = 0
+lba_end = -1
+ts_start = 0
+ts_end = 10000000
+path = None
+
 class Conf:
     def __init__(self, optspec, usage):
         self.usage = usage
-        self.readonly = False
-        self.writeonly = False
-        self.pidonly = []
-        self.n_lookbacks = 1
-        self.lba_start = 0
-        self.lba_end = -1
-        self.ts_start = 0
-        self.ts_end = 10000000
-        self.path = None
-
         self.__parseArgs("hRWP:b:B:T:" + optspec)
 
     def __parseArgs(self, optspec):
+        global  readonly, writeonly, pidonly, n_lookbacks, path, paths
+
         try:
             opts, args = getopt.getopt(sys.argv[1:], optspec)
         except getopt.GetoptError:
@@ -30,13 +32,13 @@ class Conf:
                 self.usage()
                 exit(0)
             if o == '-R':
-                self.readonly = True
+                readonly = True
             elif o == '-W':
-                self.writeonly = True
+                writeonly = True
             elif o == '-P':
-                self.pidonly = self.__parse_pid_only(a)
+                self.__parse_pid_only(a)
             elif o == '-b':
-                self.n_lookbacks = int(a)
+                n_lookbacks = int(a)
             elif o == '-B':
                 self.__parse_lba_range(a)
             elif o == '-T':
@@ -47,35 +49,40 @@ class Conf:
             return False
 
         if len(args) == 1:
-            self.path = args[0]
-            self.paths = [ args[0] ]
+            path = args[0]
+            paths = [ args[0] ]
         else:
-            self.paths = args
+            paths = args
 
         self.check()
         return True
 
     def __parse_lba_range(self, range):
+        global  lba_start, lba_end
+
         if not '-' in range:
-            self.lba_start = int(range)
+            lba_start = int(range)
         else:
             start, end = range.split(sep='-', maxsplit=1)
-            self.lba_start = int(start)
-            self.lba_end = int(end)
+            lba_start = int(start)
+            lba_end = int(end)
 
     def __parse_ts_range(self, range):
+        global      ts_start, ts_end
+
         if not '-' in range:
-            self.ts_start = float(range)
+            ts_start = float(range)
         else:
             start, end = range.split(sep='-', maxsplit=1)
-            self.ts_start = float(start)
-            self.ts_end = float(end)
+            ts_start = float(start)
+            ts_end = float(end)
 
     def __parse_pid_only(self, pidset):
-        pids = []
+        global  pidonly
+
+        pidonly = []
         for p in pidset.split(sep=','):
-            pids.append(int(p))
-        return pids
+            pidonly.append(int(p))
 
     def handleOpt(self, o, a):
         pass

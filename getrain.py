@@ -3,6 +3,7 @@
 import logger
 import trace_train
 from conf_gt import ConfGetTrain
+import conf
 
 def __usage_getrain():
     print("""\
@@ -22,11 +23,9 @@ Usage: getrain.py [<options>] <path>
 """)
 
 class GetTrain:
-    def getdata(self, usage):
-        conf = ConfGetTrain(usage)
-
+    def getdata(self):
         for path in conf.paths:
-            tt = trace_train.TraceTrain(conf)
+            tt = trace_train.TraceTrain()
             if not tt.load(path):
                 return
             tt.gen_train_data()
@@ -37,4 +36,5 @@ if __name__ == "__main__":
     logger.init("getrain")
 
     gt = getrain.GetTrain()
-    exit(gt.getdata(__usage_getrain))
+    ConfGetTrain(__usage_getrain)
+    exit(gt.getdata())

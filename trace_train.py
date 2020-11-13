@@ -2,18 +2,15 @@ import trace_access
 import accbmpbar
 import csv
 import sys
+import conf
 
 class TraceTrain(trace_access.TraceAccess):
-    def __init__(self, conf):
-        super().__init__(conf)
-        self.conf = conf
-
     def gen_train_data(self):
-        if self.conf.path_out is None:
+        if conf.path_out is None:
             outf = sys.stdout
         else:
-            outf = open(self.conf.path_out, 'a')
-        if self.conf.no_csv:
+            outf = open(conf.path_out, 'a')
+        if conf.no_csv:
             self.__write_as_human_readable(outf)
         else:
             self.__write_csv(outf)
@@ -23,7 +20,7 @@ class TraceTrain(trace_access.TraceAccess):
         for ctx in self.contexts:
             accesses = self.__get_context_accesses(ctx)
 
-            bmpbar = accbmpbar.AccBmpBar(self.conf, self.lba_max, accesses)
+            bmpbar = accbmpbar.AccBmpBar(self.lba_max, accesses)
             for accbmp in bmpbar:
                 writer.writerow(accbmp.score.getScoreVec() + accbmp.bitmap())
 
@@ -31,7 +28,7 @@ class TraceTrain(trace_access.TraceAccess):
         for ctx in self.contexts:
             accesses = self.__get_context_accesses(ctx)
 
-            bmpbar = accbmpbar.AccBmpBar(self.conf, accesses)
+            bmpbar = accbmpbar.AccBmpBar(accesses)
             for accbmp in bmpbar:
                 outf.write(str(accbmp.score))
                 outf.write('\n')
