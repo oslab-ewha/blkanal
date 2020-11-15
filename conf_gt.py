@@ -21,7 +21,7 @@ class ConfGetTrain(conf.Conf):
         elif o == '-i':
             conf.ts_intv = float(a)
         elif o == '-M':
-            conf.lbamax = int(a)
+            conf.lba_max = int(a)
         elif o == '-f':
             conf.n_forwards = int(a)
         elif o == '-H':
