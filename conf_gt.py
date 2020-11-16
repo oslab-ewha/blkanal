@@ -5,8 +5,8 @@ import os
 class ConfGetTrain(conf.Conf):
     def __init__(self, usage):
         conf.width = 10
-        conf.height = 10
-        conf.ts_intv = 0.001
+        conf.height = 5
+        conf.ts_intv = 0.005
         conf.lba_max = 0
         conf.path_out = None
         conf.n_forwards = 1

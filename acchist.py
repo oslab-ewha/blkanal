@@ -6,11 +6,11 @@ class AccessHist:
         self.ts_width = ts_width
 
     def append(self, acc):
-        accbit = self.__getAccBit(acc)
-        self.accesses.append(acc)
         if acc.ts > self.ts_width:
             ts_old = acc.ts - self.ts_width
             self.__clearOutOldAccess(ts_old)
+        accbit = self.__getAccBit(acc)
+        self.accesses.append(acc)
         return accbit
 
     def __getAccBit(self, acc):

@@ -65,6 +65,6 @@ class AccBmpBar:
                 idx_forward = self.__index + conf.width - 1
                 acc_bmp_score.bmpcol_forwards = self.__bmp_cols_score[idx_forward:idx_forward + conf.n_forwards - 1]
                 acc_bmp_score.calcScore()
-                if acc_bmp_score.score.count > 0:
+                if acc_bmp_score.score.counts[0] + acc_bmp_score.score.counts[1] > 0:
                     acc_bmp.score = acc_bmp_score.score
                     return acc_bmp

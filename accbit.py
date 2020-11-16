@@ -37,7 +37,7 @@ class AccBit:
             self.has_read = True
         if accbit.has_write:
             self.has_write = True
-            
+
     def getval(self):
         val = 0
         if self.has_read:
@@ -54,7 +54,11 @@ class AccBit:
 
     def getScore(self):
         score = AccScore()
-        score.count = 1
+        if self.has_read:
+            score.counts[0] = 1
+        if self.has_write:
+            score.counts[1] = 1
+
         n_hits = 0
         n_seqs = 0
         n_rnds = 0
@@ -65,9 +69,11 @@ class AccBit:
         if self.has_rnd:
             n_rnds += 1
         total = float(n_hits + n_seqs + n_rnds)
-        score.n_hits = n_hits / total
-        score.n_seqs = n_seqs / total
-        score.n_rnds = n_rnds / total
+        for i in range(2):
+            if score.counts[i] > 0:
+                score.n_hits[i] = n_hits / total
+                score.n_seqs[i] = n_seqs / total
+                score.n_rnds[i] = n_rnds / total
         return score
 
     def __str__(self):

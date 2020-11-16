@@ -24,7 +24,8 @@ class TraceAccess(trace_data.TraceData):
         if len(conf.pidonly) > 0:
             if not acc.pid in conf.pidonly:
                 return
-
+        if acc.lba == 0:
+            return
         if conf.writeonly:
             if acc.is_read:
                 return

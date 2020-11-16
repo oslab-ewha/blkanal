@@ -1,45 +1,53 @@
 class AccScore:
     def __init__(self):
-        self.count = 0
-        self.n_hits = 0
-        self.n_seqs = 0
-        self.n_rnds = 0
-        self.__merge_weight = 1
+        self.counts = [ 0, 0 ]
+        self.n_hits = [ 0, 0 ]
+        self.n_seqs = [ 0, 0 ]
+        self.n_rnds = [ 0, 0 ]
+        self.__merge_weights = [ 1, 1 ]
 
     def addScore(self, score):
-        self.count += score.count
-        self.n_hits += score.n_hits
-        self.n_seqs += score.n_seqs
-        self.n_rnds += score.n_rnds
+        for i in range(2):
+            self.__addScore(score, i)
 
-    def normalize(self):
-        if self.count == 0:
-            return
-        self.n_hits /= self.count
-        self.n_seqs /= self.count
-        self.n_rnds /= self.count
-        self.count = 1
+    def __addScore(self, score, i):
+        self.counts[i] += score.counts[i]
+        self.n_hits[i] += score.n_hits[i]
+        self.n_seqs[i] += score.n_seqs[i]
+        self.n_rnds[i] += score.n_rnds[i]
 
     def mergeScore(self, score):
-        if self.count == 0:
-            if score.count == 0:
+        for i in range(2):
+            self.__mergeScore(score, i)
+        
+    def __mergeScore(self, score, i):
+        if self.counts[i] == 0:
+            if score.counts[i] == 0:
                 return
-            self.n_hits = score.n_hits
-            self.n_seqs = score.n_seqs
-            self.n_rnds = score.n_rnds
-            self.count = score.count
+            self.n_hits[i] = score.n_hits[i]
+            self.n_seqs[i] = score.n_seqs[i]
+            self.n_rnds[i] = score.n_rnds[i]
+            self.counts[i] = score.counts[i]
+
+        if score.counts[i] == 0:
+            self.__merge_weights[i] *= 2
             return
-        if score.count == 0:
-            self.__merge_weight *= 2
-            return
-        self.n_hits += (self.__merge_weight * score.n_hits)
-        self.n_seqs += (self.__merge_weight * score.n_seqs)
-        self.n_rnds += (self.__merge_weight * score.n_rnds)
-        self.count += (self.__merge_weight * score.count)
-        self.__merge_weight = 1
+        self.n_hits[i] += (self.__merge_weights[i] * score.n_hits[i])
+        self.n_seqs[i] += (self.__merge_weights[i] * score.n_seqs[i])
+        self.n_rnds[i] += (self.__merge_weights[i] * score.n_rnds[i])
+        self.counts[i] += (self.__merge_weights[i] * score.counts[i])
+        self.__merge_weights[i] = 1
 
     def getScoreVec(self):
-        return [ self.n_hits / self.count, self.n_seqs / self.count, self.n_rnds / self.count ]
+        return self.__getScoreVec(0) + self.__getScoreVec(1)
+
+    def __getScoreVec(self, i):
+        if self.counts[i] == 0:
+            return [ 0, 0, 1]
+        return [ self.n_hits[i] / self.counts[i], self.n_seqs[i] / self.counts[i], self.n_rnds[i] / self.counts[i] ]
 
     def __str__(self):
-        return "hit:{}, seq:{}, rnd:{}".format(self.n_hits, self.n_seqs, self.n_rnds)
+        return "Read:" + self.__get_str(0) + ", Write:" + self.__get_str(1)
+
+    def __get_str(self, i):
+        return "hit:{}, seq:{}, rnd:{}".format(self.n_hits[i], self.n_seqs[i], self.n_rnds[i])
