@@ -6,6 +6,8 @@ def plot(ta):
 
     fig, __ax = plt.subplots()
     __ax.set_xlabel('Time(sec)', fontweight = 'bold')
+    if conf.lba_start != 0 or conf.lba_end != -1:
+        plt.ylim([conf.lba_start, conf.lba_end])
     if not conf.display_difflba:
         plot_access(ta)
     else:
