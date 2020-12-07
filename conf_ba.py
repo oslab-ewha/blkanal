@@ -7,7 +7,7 @@ class ConfBlkAnal(conf.Conf):
         conf.grid_nx = 0
         conf.grid_ny = 0
 
-        super().__init__('pG:D', usage)
+        super().__init__('pG:Dz', usage)
 
     def handleOpt(self, o, a):
         if o == '-p':

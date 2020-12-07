@@ -15,6 +15,7 @@ Usage: blkanal.py [<options>] <path>
    -G <dim>: scatter grid dimension
    -D: display lba difference
    -B <block range>
+   -z: adjust lba start from 1
    -T <timestamp range>
    -b <cnt>: look back count for previous access
    -R: analyze only read access

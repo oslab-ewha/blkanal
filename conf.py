@@ -11,14 +11,15 @@ lba_end = -1
 ts_start = 0
 ts_end = 10000000
 path = None
+lba_start_from_1 = False
 
 class Conf:
     def __init__(self, optspec, usage):
         self.usage = usage
-        self.__parseArgs("hRWP:b:B:T:" + optspec)
+        self.__parseArgs("hRWP:b:B:T:z" + optspec)
 
     def __parseArgs(self, optspec):
-        global  readonly, writeonly, pidonly, n_lookbacks, path, paths
+        global  readonly, writeonly, pidonly, n_lookbacks, path, paths, lba_start_from_1
 
         try:
             opts, args = getopt.getopt(sys.argv[1:], optspec)
@@ -43,6 +44,8 @@ class Conf:
                 self.__parse_lba_range(a)
             elif o == '-T':
                 self.__parse_ts_range(a)
+            elif o == '-z':
+                lba_start_from_1 = True
             else:
                 self.handleOpt(o, a)
         if len(args) < 1:

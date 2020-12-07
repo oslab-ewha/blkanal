@@ -14,6 +14,7 @@ Usage: getrain.py [<options>] <path>
    -i <interval>: timestamp interval for width
    -M <lba max>
    -B <block range>
+   -z: adjust lba start from 1
    -T <timestamp range>
    -R: analyze only read access
    -W: analyze only write access

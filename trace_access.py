@@ -13,6 +13,13 @@ class TraceAccess(trace_data.TraceData):
         self.lba_min = -1
         self.lba_max = 0
 
+    def load(self, path):
+        if super().load(path):
+            if conf.lba_start_from_1:
+                self.__setbase_lba()
+            return True
+        return False
+
     def parseLine(self, row):
         acc = access.Access(row)
         if acc.lba < conf.lba_start or (conf.lba_end > 0 and acc.lba > conf.lba_end):
@@ -51,6 +58,12 @@ class TraceAccess(trace_data.TraceData):
             self.n_reads += 1
         else:
             self.n_writes += 1
+
+    def __setbase_lba(self):
+        for acc in self.accesses:
+            acc.lba -= (self.lba_min - 1)
+        self.lba_max -= (self.lba_min - 1)
+        self.lba_min = 1
 
     def summary(self):
         print("access count: {}(read:{}, write:{})".format(len(self.accesses), self.n_reads, self.n_writes))
