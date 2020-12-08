@@ -6,19 +6,12 @@ class ConfBlkAnal(conf.Conf):
         conf.display_difflba = False
         conf.grid_nx = 0
         conf.grid_ny = 0
+        conf.ts_unit = -1
 
-        super().__init__('pG:Dz', usage)
+        super().__init__('pDz', usage)
 
     def handleOpt(self, o, a):
         if o == '-p':
             conf.plotting_mode = True
         elif o == '-D':
             conf.display_difflba = True
-        elif o == '-G':
-            self.__parse_scatter_dim(a)
-
-    def __parse_scatter_dim(self, dim):
-        if ':' in dim:
-            nx, ny = dim.split(sep=':', maxsplit=1)
-            conf.grid_nx = int(nx)
-            conf.grid_ny = int(ny)

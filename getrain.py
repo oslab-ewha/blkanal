@@ -10,8 +10,8 @@ def __usage_getrain():
 Usage: getrain.py [<options>] <path>
   <options>
    -o <output>
-   -d <dim>: bitmap dimension, format: widthxheight
-   -i <interval>: timestamp interval for width
+   -G <width(time) x height(lba)>: bitmap dimension
+   -u <sec>: width unit for time
    -M <lba max>
    -B <block range>
    -z: adjust lba start from 1

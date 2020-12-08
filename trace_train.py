@@ -28,7 +28,7 @@ class TraceTrain(trace_access.TraceAccess):
         for ctx in self.contexts:
             accesses = self.__get_context_accesses(ctx)
 
-            bmpbar = accbmpbar.AccBmpBar(accesses)
+            bmpbar = accbmpbar.AccBmpBar(self.lba_max, accesses)
             for accbmp in bmpbar:
                 outf.write(str(accbmp.score))
                 outf.write('\n')

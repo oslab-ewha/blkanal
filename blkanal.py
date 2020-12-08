@@ -12,9 +12,11 @@ def __usage_BlkAnalysis():
 Usage: blkanal.py [<options>] <path>
   <options>
    -p: plotting mode
-   -G <dim>: scatter grid dimension
+   -d <width(time) x height(lba)>: grid dimension for scatter plot
+   -u <sec>: width unit for time
    -D: display lba difference
    -B <block range>
+   -M <lba max>
    -z: adjust lba start from 1
    -T <timestamp range>
    -b <cnt>: look back count for previous access

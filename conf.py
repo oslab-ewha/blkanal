@@ -8,18 +8,22 @@ pidonly = []
 n_lookbacks = 1
 lba_start = 0
 lba_end = -1
+lba_max = 0
 ts_start = 0
 ts_end = 10000000
 path = None
+grid_nx = 5
+grid_ny = 10
+ts_unit = 0.005
 lba_start_from_1 = False
 
 class Conf:
     def __init__(self, optspec, usage):
         self.usage = usage
-        self.__parseArgs("hRWP:b:B:T:z" + optspec)
+        self.__parseArgs("hRWP:b:B:M:T:G:u:z" + optspec)
 
     def __parseArgs(self, optspec):
-        global  readonly, writeonly, pidonly, n_lookbacks, path, paths, lba_start_from_1
+        global  readonly, writeonly, pidonly, n_lookbacks, lba_max, path, paths, ts_unit, lba_start_from_1
 
         try:
             opts, args = getopt.getopt(sys.argv[1:], optspec)
@@ -42,8 +46,14 @@ class Conf:
                 n_lookbacks = int(a)
             elif o == '-B':
                 self.__parse_lba_range(a)
+            elif o == '-M':
+                lba_max = int(a)
             elif o == '-T':
                 self.__parse_ts_range(a)
+            elif o == '-G':
+                self.__parse_grid_dim(a)
+            elif o == '-u':
+                ts_unit = float(a)
             elif o == '-z':
                 lba_start_from_1 = True
             else:
@@ -79,6 +89,14 @@ class Conf:
             start, end = range.split(sep='-', maxsplit=1)
             ts_start = float(start)
             ts_end = float(end)
+
+    def __parse_grid_dim(self, dim):
+        if 'x' in dim:
+            global      grid_nx, grid_ny
+
+            nx, ny = dim.split(sep='x', maxsplit=1)
+            grid_nx = int(nx)
+            grid_ny = int(ny)
 
     def __parse_pid_only(self, pidset):
         global  pidonly

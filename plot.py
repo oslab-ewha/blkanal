@@ -8,6 +8,10 @@ def plot(ta):
     __ax.set_xlabel('Time(sec)', fontweight = 'bold')
     if conf.lba_start != 0 or conf.lba_end != -1:
         plt.ylim([conf.lba_start, conf.lba_end])
+    elif conf.ts_unit > 0 and conf.grid_ny > 0:
+        plt.xlim([-0.1, conf.grid_nx + 0.1])
+        plt.ylim([-0.1, conf.grid_ny + 0.1])
+
     if not conf.display_difflba:
         plot_access(ta)
     else:
@@ -25,15 +29,26 @@ def __scatter(x, y, is_read):
         label = 'write'
     plt.scatter(x, y, c = color, label = label)
 
-def __plot_normalized_access(ta, conf):
+def __plot_normalized_access(ta):
     xr = []
     yr = []
     xw = []
     yw = []
     ts_start = ta.accesses[0].ts
-    ts_range = ta.accesses[-1].ts - ts_start
-    lba_range = ta.lba_max - ta.lba_min
+    if conf.ts_unit <= 0:
+        ts_range = ta.accesses[-1].ts - ts_start
+    else:
+        ts_range = conf.ts_unit * conf.grid_nx
+    if conf.lba_max == 0:
+        lba_range = ta.lba_max - ta.lba_min
+    else:
+        lba_range = conf.lba_max
+
     for acc in ta.accesses:
+        if lba_range == 0:
+            continue
+        if acc.ts >= ts_start + ts_range:
+            break
         x = int((acc.ts - ts_start) / ts_range * conf.grid_nx)
         y = int((acc.lba - ta.lba_min) / lba_range * conf.grid_ny)
         if acc.is_read:

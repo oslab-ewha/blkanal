@@ -41,7 +41,7 @@ class AccBmp:
 
     def __str__(self):
         s = self.__str_bar()
-        for r in range(0, self.height):
+        for r in reversed(range(0, self.height)):
             s += '|'
             for c in range(0, self.width):
                 s += str(self.acc_bmp[c].bmp_col[r])
