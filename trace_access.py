@@ -9,6 +9,8 @@ class TraceAccess(trace_data.TraceData):
         self.accesses = []
         self.n_reads = 0
         self.n_writes = 0
+        self.n_read_blks = 0
+        self.n_write_blks = 0
         self.contexts = {}
         self.lba_min = -1
         self.lba_max = 0
@@ -56,8 +58,10 @@ class TraceAccess(trace_data.TraceData):
         self.accesses.append(acc)
         if acc.is_read:
             self.n_reads += 1
+            self.n_read_blks += acc.nblks
         else:
             self.n_writes += 1
+            self.n_write_blks += acc.nblks
 
     def __setbase_lba(self):
         for acc in self.accesses:
@@ -67,6 +71,13 @@ class TraceAccess(trace_data.TraceData):
 
     def summary(self):
         print("access count: {}(read:{}, write:{})".format(len(self.accesses), self.n_reads, self.n_writes))
+        n_avg_read_blks = 0
+        n_avg_write_blks = 0
+        if self.n_reads > 0:
+            n_avg_read_blks = self.n_read_blks / self.n_reads
+        if self.n_writes > 0:
+            n_avg_write_blks = self.n_write_blks / self.n_writes
+        print("average blks: read:{}, write:{}".format(format(n_avg_read_blks, ".1f"), format(n_avg_write_blks, ".1f")))
         print("LBA: {}-{}".format(self.lba_min, self.lba_max))
         print("timestamp: {}-{}".format(format(self.accesses[0].ts, ".4f"), format(self.accesses[-1].ts, ".4f")))
         for c in self.contexts:

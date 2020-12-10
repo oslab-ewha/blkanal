@@ -12,7 +12,7 @@ def __usage_BlkAnalysis():
 Usage: blkanal.py [<options>] <path>
   <options>
    -p: plotting mode
-   -d <width(time) x height(lba)>: grid dimension for scatter plot
+   -G <width(time) x height(lba)>: grid dimension for scatter plot
    -u <sec>: width unit for time
    -D: display lba difference
    -B <block range>
