@@ -7,6 +7,8 @@ class TraceAccess(trace_data.TraceData):
     def __init__(self):
         super().__init__()
         self.accesses = []
+        self.lbas_read = {}
+        self.lbas_write = {}
         self.n_reads = 0
         self.n_writes = 0
         self.n_read_blks = 0
@@ -63,6 +65,12 @@ class TraceAccess(trace_data.TraceData):
             self.n_writes += 1
             self.n_write_blks += acc.nblks
 
+        for i in range(acc.nblks):
+            if acc.is_read:
+                self.lbas_read[acc.lba + i] = True
+            else:
+                self.lbas_write[acc.lba + i] = True
+
     def __setbase_lba(self):
         for acc in self.accesses:
             acc.lba -= (self.lba_min - 1)
@@ -71,6 +79,9 @@ class TraceAccess(trace_data.TraceData):
 
     def summary(self):
         print("access count: {}(read:{}, write:{})".format(len(self.accesses), self.n_reads, self.n_writes))
+        lba_reads = len(self.lbas_read)
+        lba_writes = len(self.lbas_write)
+        print("lba count: {}(read:{}, write:{})".format(lba_reads + lba_writes, lba_reads, lba_writes))
         n_avg_read_blks = 0
         n_avg_write_blks = 0
         if self.n_reads > 0:
