@@ -11,7 +11,6 @@ def plot(ta):
     elif conf.ts_unit > 0 and conf.grid_ny > 0:
         plt.xlim([-0.1, conf.grid_nx + 0.1])
         plt.ylim([-0.1, conf.grid_ny + 0.1])
-
     if not conf.display_difflba:
         plot_access(ta)
     else:
@@ -20,15 +19,22 @@ def plot(ta):
     __ax.legend()
     plt.show()
 
-def __scatter(x, y, is_read):
+def __scatter(x, y, n, is_read):
     if is_read:
         color = 'red'
+        fin_color='coral'
         label = 'read'
     else:
         color = 'blue'
+        fin_color='purple'
         label = 'write'
-    plt.scatter(x, y, c = color, label = label)
-
+    if conf.nblks_plotting_mode:
+    	length=[y[i]+n[i]-1 for i in range(len(y))]
+    	plt.scatter(x, y, c = color, label = label+' (start point)')
+    	plt.scatter(x, length, c = fin_color, label=label+' (end point)')
+    else:
+    	plt.scatter(x, y, c = color, label = label)
+    
 def __plot_normalized_access(ta):
     xr = []
     yr = []
@@ -61,17 +67,21 @@ def __plot_normalized_access(ta):
 def __plot_access(ta):
     xr = []
     yr = []
+    yrb= []
     xw = []
     yw = []
+    ywb= []
     for acc in ta.accesses:
         if acc.is_read:
             xr.append(acc.timestamp)
             yr.append(acc.lba)
+            yrb.append(acc.nblks)
         else:
             xw.append(acc.timestamp)
             yw.append(acc.lba)
-    __scatter(xr, yr, True)
-    __scatter(xw, yw, False)
+            ywb.append(acc.nblks)
+    __scatter(xr, yr, yrb, True)
+    __scatter(xw, yw, ywb, False)
 
 def plot_access(ta):
     global      __ax

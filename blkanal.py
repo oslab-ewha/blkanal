@@ -23,6 +23,7 @@ Usage: blkanal.py [<options>] <path>
    -R: analyze only read access
    -W: analyze only write access
    -P <pid>: analyze accesses with given pid
+   -r: plotting mode with number of blocks
 """)
 
 class BlkAnalysis:
